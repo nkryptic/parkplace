@@ -2,6 +2,7 @@
 $:.unshift "./lib"
 require 'optparse'
 $PARKPLACE_ACCESSORIES = true
+$PARKPLACE_PROGRESS = false
 require 'rubygems'
 gem 'mongrel', '< 1.1'
 gem 'activesupport', '< 2.0'
@@ -16,6 +17,7 @@ DEFAULT_SECRET = 'OtxrzxIsfpFjA7SwPzILwy8Bw21TLhquhboDYROV'
 options = ParkPlace.options
 options.host = "127.0.0.1"
 options.port = 3002
+options.pidfile = "./parkplace.pid"
 
 opts = OptionParser.new do |opts|
     opts.banner = "Usage: parkplace [options] [host] [port]"
@@ -29,6 +31,10 @@ opts = OptionParser.new do |opts|
         options.parkplace_dir = d
     end
 
+    opts.on("-p", "--pidfile PIDFILE", "Write pid to file") do |p|
+      options.pidfile = p
+    end
+
     opts.on("-D", "--[no-]daemon",  "Daemon mode") do |d|
         options.daemon = d
     end
@@ -36,7 +42,7 @@ opts = OptionParser.new do |opts|
     opts.on("-v", "--[no-]verbose", "Run verbosely") do |v|
         options.verbose = v
     end
-
+    
     opts.separator ""
     opts.separator "Common options:"
 
@@ -77,4 +83,4 @@ if num_users == 1 and admin and admin.password == hmac_sha1( DEFAULT_PASSWORD, a
     puts "** You should change the default password for the admin at soonest chance!"
 end
 
-ParkPlace.serve(options.host, options.port)
+ParkPlace.serve(options.host, options.port, options.pidfile)

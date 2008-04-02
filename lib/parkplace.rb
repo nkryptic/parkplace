@@ -87,15 +87,15 @@ module ParkPlace
             end
             ParkPlace::STORAGE_PATH.replace options.storage_dir
         end
-        def serve(host, port)
+        def serve(host, port, pidfile)
             require 'mongrel'
             require 'mongrel/camping'
             if $PARKPLACE_PROGRESS
-              require_gem 'mongrel_upload_progress'
+              gem 'mongrel_upload_progress'
               GemPlugin::Manager.instance.load "mongrel" => GemPlugin::INCLUDE
             end
 
-            config = Mongrel::Configurator.new :host => host do
+            config = Mongrel::Configurator.new :host => host, :pid_file => pidfile do
                 listener :port => port do
                     uri "/", :handler => Mongrel::Camping::CampingHandler.new(ParkPlace)
                     if $PARKPLACE_PROGRESS
@@ -104,6 +104,7 @@ module ParkPlace
                     uri "/favicon", :handler => Mongrel::Error404Handler.new("")
                     trap("INT") { stop }
                     run
+                    write_pid_file
                 end
             end
 
