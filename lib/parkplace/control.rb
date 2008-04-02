@@ -248,9 +248,9 @@ module ParkPlace::Views
         html do
             head do
                 title { "Park Place Control Center &raquo; " + str }
-                script :language => 'javascript', :src => R(CStatic, 'js/jquery.js')
+                script :language => 'javascript', :src => R(CStatic, 'jquery.js')
                 # script :language => 'javascript', :src => R(CStatic, 'js/support.js')
-                style "@import '#{self / R(CStatic, 'css/control.css')}';", :type => 'text/css'
+                style "@import '#{self / R(CStatic, 'control.css')}';", :type => 'text/css'
             end
             body do
                 div.page! do
